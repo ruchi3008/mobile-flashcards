@@ -10,6 +10,7 @@ import reducer from './reducers'
 import { createStore } from 'redux'
 import { getInitialData } from './utils/initializationTask'
 import AddCard from './components/AddCard'
+import Quiz from './components/Quiz'
 
 const store = createStore(reducer)
 getInitialData(store)
@@ -38,6 +39,14 @@ const DeckStackNavigator = StackNavigator({
             onPress={() => navigation.goBack()}
           />
         )
+      }
+    }
+  },
+  Quiz: {
+    screen: Quiz,
+    navigationOptions({ navigation }) {
+      return {
+        title: 'Quiz',
       }
     }
   }

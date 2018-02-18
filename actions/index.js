@@ -25,6 +25,7 @@ export function addDeck (deck){
 }
 
 export function addCard (question,answer,deck){
+  console.log("Step 3 : addCard : action")
   return {
     type:ADD_CARD,
     deck,

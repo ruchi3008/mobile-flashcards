@@ -8,21 +8,24 @@ import { connect } from 'react-redux'
 class DeckDetails extends Component {
 
   refresh =() => {
-    console.log("Hellohi")
-    this.setState({
-      hello:"hello"
-    })
+    console.log("Step 5 : Refreshed")
+    // this.setState({
+    //   hello:"hello"
+    // })
     }
 
   render() {
+    console.log("Step 7 : Rendering updated DeckDetails")
     return (
       <View style={styles.container}>
         <Text>DeckDetails</Text>
          <Text>{this.props && this.props.deck && this.props.deck.title}</Text>
-         <Text>{this.props && this.props.deck && this.props.deck.numberOfCards}</Text>
+         <Text>{this.props && this.props.deck && this.props.deck.cards.length}</Text>
         <TouchableOpacity onPress={() => this.props.navigation.navigate('AddCard',{deck:this.props.navigation.state.params.deck,
         refresh:()=>this.refresh()})}>
             <Text>Add Card</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Quiz',{deck:this.props.deck})}>
+            <Text>Start Quiz</Text></TouchableOpacity>
       </View>
     );
   }

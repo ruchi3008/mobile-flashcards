@@ -17,7 +17,7 @@ class Decks extends Component {
          this.receivDeck(deck)
          this.props.navigation.navigate('DeckDetails',{deck:deck})}}>
           <Text>{deck.item.title}</Text></TouchableOpacity>
-      <Text>{deck.item.numberOfCards}</Text>
+      <Text>{deck.item.cards.length}</Text>
     </View>
   )}
   render(){

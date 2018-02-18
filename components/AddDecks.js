@@ -12,7 +12,7 @@ class AddDecks extends React.Component {
      console.log("hghg")
      const { dispatch } = this.props
      setDeck(deckTitle)
-     dispatch(addDeck({title:deckTitle,numberOfCards:0,}))
+     dispatch(addDeck({title:deckTitle,cards:[]}))
    }
      render(){
     return (

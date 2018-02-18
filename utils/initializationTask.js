@@ -11,7 +11,7 @@ export function getInitialData(store){
       let value = deck[i][1]
       allDecks.push(JSON.parse(value))
     })
-    
+
       store.dispatch(receiveDecks(allDecks))
   });
 });

@@ -16,19 +16,20 @@ const reducer = (state = [],action) => {
       deck :action.deck
     }
     case ADD_CARD :
-    console.log(state.deck)
+    console.log("Step 4 : ADD_CARD : reducer" )
     const index = state.decks.findIndex(item => item.title === action.deck.item.title)
+    console.log("state.decks[index].cards.length" + state.decks[index].cards.length)
+    console.log("state.deck.cards.length" + state.deck.cards.length)
+    console.log("state.deck.cards" + state.deck.cards)
     return {
       ...state,
       decks : [...state.decks.slice(0,index),
       {
         ...state.decks[index],
-        numberOfCards:state.decks[index].numberOfCards + 1,
         cards:[...state.decks[index].cards,action.cardDetails],
       },
       ...state.decks.slice(index+1)],
       deck :{...state.deck,
-      numberOfCards:state.deck.numberOfCards+1,
       cards:[...state.deck.cards,action.cardDetails]}
     }
   }
