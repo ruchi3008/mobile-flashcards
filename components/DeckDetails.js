@@ -21,7 +21,7 @@ class DeckDetails extends Component {
         <Text>DeckDetails</Text>
          <Text>{this.props && this.props.deck && this.props.deck.title}</Text>
          <Text>{this.props && this.props.deck && this.props.deck.cards.length}</Text>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('AddCard',{deck:this.props.navigation.state.params.deck,
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('AddCard',{deck:this.props.deck,
         refresh:()=>this.refresh()})}>
             <Text>Add Card</Text></TouchableOpacity>
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Quiz',{deck:this.props.deck})}>

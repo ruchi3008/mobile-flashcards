@@ -17,7 +17,7 @@ const reducer = (state = [],action) => {
     }
     case ADD_CARD :
     console.log("Step 4 : ADD_CARD : reducer" )
-    const index = state.decks.findIndex(item => item.title === action.deck.item.title)
+    const index = state.decks.findIndex(item => item.title === action.deck.title)
     console.log("state.decks[index].cards.length" + state.decks[index].cards.length)
     console.log("state.deck.cards.length" + state.deck.cards.length)
     console.log("state.deck.cards" + state.deck.cards)

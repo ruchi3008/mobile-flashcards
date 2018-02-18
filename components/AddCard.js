@@ -11,7 +11,7 @@ class AddCard extends React.Component {
 
    _onPressButton = (question,answer,deck) => {
      console.log("Step 1")
-     addCardToDeck(question,answer,deck)
+     addCardToDeck(question,answer,deck).then((deck)=>console.log(deck))
      const { dispatch } = this.props
      dispatch(addCard(question,answer,deck))
      this.props.navigation.state.params.refresh();

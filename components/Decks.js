@@ -23,7 +23,7 @@ class Decks extends Component {
   render(){
 
     return (
-      <View>
+      <View >
         <FlatList
           data={this.props.decks}
           renderItem = {this.renderItems}

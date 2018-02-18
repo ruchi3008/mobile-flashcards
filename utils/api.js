@@ -20,7 +20,7 @@ export function getDeck(key) {
 export function setDeck(deckTitle) {
   const deckObject = {
     title:deckTitle,
-    cards:[]
+    cards:new Array()
   }
 
   try {
@@ -32,10 +32,12 @@ export function setDeck(deckTitle) {
 }
 
 export function addCardToDeck(question,answer,deck){
-console.log("Step 2: addCardToDeck -api")
+console.log("Step 2: addCardToDeck -apis" + deck + deck.title + deck.cards.length,question,answer)
 const deckObject = {
-    title:deck.item.title,
-    cards:(deck.item.cards)?[...deck.item.cards,{question,answer}]:[{question,answer}]
+    title:deck.title,
+  //  cards:(deck.cards)?[...deck.cards,{question,answer}]:[{question,answer}]
+  cards:[...deck.cards,{question,answer}]
   }
-  return AsyncStorage.mergeItem(deck.item.title,JSON.stringify(deckObject))
+  console.log(deckObject)
+  return AsyncStorage.mergeItem(deck.title,JSON.stringify(deckObject))
 }

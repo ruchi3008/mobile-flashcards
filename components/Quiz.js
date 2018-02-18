@@ -7,7 +7,11 @@ import { connect } from 'react-redux'
 
 class Quiz extends Component {
   state = {
-    questionNo:0
+    questionNo:1,
+    showAnswer:false,
+    quizComplete:false,
+    correctAnswer:0,
+    percentage:0
   }
   componentDidMount(){
     this.setState({
@@ -18,11 +22,16 @@ class Quiz extends Component {
     })
   }
   _onPressButton(answer){
-    if (this.props.navigation.state.params.deck.cards[this.state.questionNo]===answer)
+    if (this.props.navigation.state.params.deck.cards[this.state.questionNo-1].answer===answer)
       this.setState({correctAnswer:this.state.correctAnswer +1})
-    this.setState({questionNo:this.state.questionNo +1})
+    this.setState({questionNo:this.state.questionNo +1,showAnswer:false})
     if(this.state.questionNo===this.props.navigation.state.params.deck.cards.length){
-        this.setState({quizComplete:true})
+      const percentage = parseInt(this.state.correctAnswer)/parseInt(this.props.navigation.state.params.deck.cards.length)*100
+      console.log(percentage,parseInt(this.state.correctAnswer),parseInt(this.props.navigation.state.params.deck.cards.length))
+        this.setState(
+          {quizComplete:true,
+           percentage : percentage
+          })
     }
   }
   _flipCard(){
@@ -33,8 +42,8 @@ class Quiz extends Component {
   render() {
     console.log("quizComplete",this.state.quizComplete)
     let card = {}
-    if(this.props.navigation.state.params.deck.cards[this.state.questionNo])
-     card =  this.props.navigation.state.params.deck.cards[this.state.questionNo]
+    if(this.props.navigation.state.params.deck.cards[this.state.questionNo-1])
+     card =  this.props.navigation.state.params.deck.cards[this.state.questionNo-1]
     return (
       <View style={styles.container}>
       {!this.state.quizComplete &&
@@ -43,9 +52,9 @@ class Quiz extends Component {
           {!this.state.quizComplete && !this.state.showAnswer &&
             <View>
             <Text>{card.question}</Text>
-
              <TouchableOpacity onPress={() => { this._flipCard()}}>
-                <Text>Answer</Text></TouchableOpacity>
+                 <Text>Answer</Text>
+              </TouchableOpacity>
              <TouchableOpacity onPress={() => { this._onPressButton("yes")}}>
                 <Text>Correct</Text></TouchableOpacity>
             <TouchableOpacity onPress={() => { this._onPressButton("no")}}>
@@ -56,7 +65,7 @@ class Quiz extends Component {
               <View>
                <Text>{card.answer}</Text>
                <TouchableOpacity onPress={() => { this._flipCard()}}>
-                  <Text>Answer</Text></TouchableOpacity>
+                  <Text>Question</Text></TouchableOpacity>
                <TouchableOpacity onPress={() => { this._onPressButton("yes")}}>
                   <Text>Correct</Text></TouchableOpacity>
               <TouchableOpacity onPress={() => { this._onPressButton("no")}}>
@@ -64,7 +73,7 @@ class Quiz extends Component {
                 </View>
               }
           {this.state.quizComplete &&
-            <Text>Hello</Text>
+            <Text>You have secured {this.state.percentage && this.state.percentage}</Text>
           }
       </View>
     );
