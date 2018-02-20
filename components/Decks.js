@@ -12,18 +12,21 @@ class Decks extends Component {
   }
   renderItems = (deck) => {
     return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => {
-         this.receivDeck(deck)
-         this.props.navigation.navigate('DeckDetails',{deck:deck})}}>
-          <Text>{deck.item.title}</Text></TouchableOpacity>
-      <Text>{deck.item.cards.length}</Text>
+    <View style={styles.deckStyle}>
+      <TouchableOpacity
+          onPress={() => {
+            this.receivDeck(deck)
+            this.props.navigation.navigate('DeckDetails',{deck:deck})}}>
+          <Text style={styles.textStyle1}>{deck.item.title}
+          </Text>
+      </TouchableOpacity>
+      <Text style={styles.textStyle2}>{deck.item.cards.length} card{!(deck.item.cards.length===1) && <Text>s</Text>}</Text>
     </View>
   )}
   render(){
 
     return (
-      <View >
+      <View style={styles.container}>
         <FlatList
           data={this.props.decks}
           renderItem = {this.renderItems}
@@ -38,11 +41,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent:'center',
-    alignItems:'center',
+    alignItems:'stretch',
+    backgroundColor:'white'
   },
   deckStyle: {
-    height:30,
-  }
+    height:175,
+    justifyContent:'center',
+    alignItems:'center',
+    borderRadius: 4,
+     borderWidth: 0.5,
+
+  },
+  textStyle1: {
+    fontSize: 35,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  textStyle2: {
+    fontSize: 25,
+    textAlign: 'center',
+    color:'#808080',
+  },
 });
 
 const mapStateToProps = (state,props) => {

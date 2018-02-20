@@ -17,8 +17,18 @@ getInitialData(store)
 const Tabs = TabNavigator({
   Decks:{
     screen: Decks,
-  },  AddDecks:{
+  },
+  AddDecks:{
       screen: AddDecks,
+  },
+},
+{
+  tabBarOptions: {
+    style:{
+      backgroundColor :'#ffffff'
+    },
+    activeTintColor: '#000000',
+    inactiveTintColor: '#ffffff',
   },
 })
 const DeckStackNavigator = StackNavigator({
@@ -27,26 +37,31 @@ const DeckStackNavigator = StackNavigator({
   },
   DeckDetails : {
     screen: DeckDetails,
+    navigationOptions: ({navigation}) =>({
+      title:`${navigation.state.params.deck.item.title}`,
+      headerTintColor: 'white',
+      headerStyle: {
+        backgroundColor: 'black',
+      }
+    })
   },
   AddCard : {
     screen : AddCard,
-    navigationOptions({ navigation }) {
-      return {
-        title: 'Add Card',
-        headerLeft: (
-          <HeaderBackButton
-            title="Custom"
-            onPress={() => navigation.goBack()}
-          />
-        )
+    navigationOptions: {
+      title:'Add Card',
+      headerTintColor: 'white',
+      headerStyle: {
+        backgroundColor: 'black',
       }
     }
   },
   Quiz: {
     screen: Quiz,
-    navigationOptions({ navigation }) {
-      return {
-        title: 'Quiz',
+    navigationOptions: {
+      title:'Quiz',
+      headerTintColor: 'white',
+      headerStyle: {
+        backgroundColor: 'black',
       }
     }
   }
