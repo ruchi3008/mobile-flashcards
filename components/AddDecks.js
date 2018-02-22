@@ -10,7 +10,7 @@ class AddDecks extends React.Component {
    }
 
    _onPressButton = (deckTitle) => {
-     console.log("hghg")
+
      const { dispatch } = this.props
      setDeck(deckTitle)
      dispatch(addDeck({title:deckTitle,cards:[]}))

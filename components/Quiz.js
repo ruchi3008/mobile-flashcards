@@ -1,56 +1,97 @@
 import React,{Component} from 'react';
-import { StyleSheet, Text, View,Platform, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View,Platform, TouchableOpacity,Animated} from 'react-native';
 import { TabNavigator } from 'react-navigation'
 import { getDeck } from '../utils/api'
 import { receiveDeck } from '../actions'
 import { connect } from 'react-redux'
 import TextButton from './TextButton'
+import QuizResults from './QuizResults'
+
 class Quiz extends Component {
-  state = {
-    questionNo:1,
-    showAnswer:false,
-    quizComplete:false,
-    percentage:0,
-    correctAnswer: this.props.navigation.state.params.deck.cards.length
-  }
-  // componentDidMount(){
-  //   this.setState({
-  //     questionNo:1,
-  //     quizComplete:false,
-  //     showAnswer:false
-  //   })
-  // }
-  _onPressButton(answer){
-    console.log(this.props.navigation.state.params.deck.cards[this.state.questionNo-1].answer.toUpperCase(),answer.toUpperCase())
-    // if (this.props.navigation.state.params.deck.cards[this.state.questionNo-1].answer.toUpperCase()===answer.toUpperCase())
-    //   {
-    //     this.setState({
-    //        correctAnswer:(this.state.correctAnswer)?this.state.correctAnswer+1:1
-    //      })
-    //     console.log(this.state.correctAnswer)
-    //   }
-     if (this.props.navigation.state.params.deck.cards[this.state.questionNo-1].answer.toUpperCase()!==answer.toUpperCase())
-    {  this.setState({
-              correctAnswer:this.state.correctAnswer-1,
-            })
+  constructor(props){
+    super(props)
+    this.state = {  questionNo:1,
+      quizComplete:false,
+      percentage:0,
+      correctAnswer: this.props.navigation.state.params.deck.cards.length,
+      showAnswer:false
     }
-    this.setState({questionNo:this.state.questionNo +1,showAnswer:false})
+  }
+
+  componentWillMount() {
+
+    this.animatedValue = new Animated.Value(0);
+    this.value = 0;
+    this.animatedValue.addListener(({ value }) => {
+      this.value = value;
+    })
+    this.frontInterpolate = this.animatedValue.interpolate({
+      inputRange: [0, 180],
+      outputRange: ['0deg', '180deg'],
+    })
+    this.backInterpolate = this.animatedValue.interpolate({
+      inputRange: [0, 180],
+      outputRange: ['180deg', '360deg'],
+    })
+    this.backOpacity = this.animatedValue.interpolate({ inputRange: [89, 90], outputRange: [0, 1] })
+  }
+  _onPressButton(answer){
+    if(this.state.showAnswer){
+      this._flipCard()
+    }
+    console.log("Before",this.state.correctAnswer)
+     if (this.props.navigation.state.params.deck.cards[this.state.questionNo-1].answer.toUpperCase()!==answer.toUpperCase())
+    {
+       this.setState((state)=>{
+        console.log("Updating state")
+        return {
+              correctAnswer:state.correctAnswer-1,
+            }})
+    }
+    console.log("After",this.state.correctAnswer)
+    this.setState({questionNo:this.state.questionNo+1,showAnswer:false})
+
     if(this.state.questionNo===this.props.navigation.state.params.deck.cards.length){
       const percentage = parseInt(this.state.correctAnswer)/parseInt(this.props.navigation.state.params.deck.cards.length)*100
-      console.log(percentage,(this.state.correctAnswer),parseInt(this.props.navigation.state.params.deck.cards.length))
-        this.setState(
+
+      this.setState(
           {quizComplete:true,
            percentage : percentage
           })
     }
   }
-  _flipCard(){
+  _flipCard() {
     this.setState({
-      showAnswer:!this.state.showAnswer,
+      showAnswer:!this.state.showAnswer
     })
+    if (this.value >= 90) {
+      Animated.spring(this.animatedValue,{
+        toValue: 0,
+        friction: 8,
+        tension: 10
+      }).start();
+    } else {
+      Animated.spring(this.animatedValue,{
+        toValue: 180,
+        friction: 8,
+        tension: 10
+      }).start();
+    }
   }
+
   render() {
-    console.log("quizComplete",this.state.quizComplete)
+    const frontAnimatedStyle = {
+      transform: [
+        { rotateY: this.frontInterpolate}
+      ]
+    }
+    const backAnimatedStyle = {
+      transform: [
+        { rotateY: this.backInterpolate }
+      ],
+      opacity: this.backOpacity,
+    }
+
     let card = {}
     if(this.props.navigation.state.params.deck.cards[this.state.questionNo-1])
      card =  this.props.navigation.state.params.deck.cards[this.state.questionNo-1]
@@ -68,31 +109,33 @@ class Quiz extends Component {
                 </View>
               }
               {
-                !this.state.quizComplete && !this.state.showAnswer &&
-                <View style={[styles.container,{flex:1,justifyContent:'flex-start',alignItems:'center'}]}>
-                <Text style={styles.textStyle2}>{card.question}</Text>
-                 <TouchableOpacity onPress={() => { this._flipCard()}}>
-                     <Text style={styles.textStyle3}>Answer</Text>
+                 !this.state.quizComplete &&
+                 <View style={[styles.container,{alignItems:'center',flex:3}]}>
+                  <View>
+                   <Animated.View style={[styles.flipCard,frontAnimatedStyle,{justifyContent:'flex-end'}]}>
+                     <Text style={styles.textStyle2}>{card.question}</Text>
+                   </Animated.View>
+                   <Animated.View style={[backAnimatedStyle,styles.flipCard,styles.flipCardBack,{justifyContent:'flex-end'}]}>
+                     <Text style={styles.textStyle2}>{card.answer}</Text>
+                   </Animated.View>
+                  </View>
+                  <TouchableOpacity onPress = {() => this._flipCard()}>
+                  <Text style = {styles.textStyle3}>{this.state.showAnswer && <Text>Question</Text> }{!this.state.showAnswer && <Text>Answer</Text> }</Text>
                   </TouchableOpacity>
-                </View>
-              }
-              {
-                !this.state.quizComplete && this.state.showAnswer &&
-                 <View style={[styles.container,{flex:1,justifyContent:'flex-start',alignItems:'center'}]}>
-                 <Text style={styles.textStyle2}>{card.answer}</Text>
-                 <TouchableOpacity onPress={() => { this._flipCard()}}>
-                    <Text style={styles.textStyle3}>Question</Text></TouchableOpacity>
                  </View>
               }
+
               {!this.state.quizComplete &&
-                <View style={[styles.container,{flex:1,justifyContent:'flex-start',alignItems:'center'}]}>
+                <View style={[styles.container,{flex:3,justifyContent:'flex-start',alignItems:'center'}]}>
                    <TextButton children="Correct" style={styles.textButtonStyle} onPress={() => { this._onPressButton("yes")}}/>
                    <TextButton children="Incorrect" style={[styles.textButtonStyle,{backgroundColor:'#B22222',paddingLeft: 58,
                       paddingRight: 58}]} onPress={() => { this._onPressButton("no")}}/>
                 </View>
               }
             {this.state.quizComplete &&
-              <Text style={styles.textStyle2} >You have secured {this.state.percentage && this.state.percentage} % </Text>
+              <View style={[styles.container]}>
+              <QuizResults style={styles.textStyle2} length={this.props.navigation.state.params.deck.cards.length} correct={this.state.correctAnswer}/>
+              </View>
             }
         </View>
         }
@@ -105,7 +148,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent:'center',
-
     backgroundColor:'white'
   },
   textStyle1: {
@@ -113,7 +155,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   textStyle2: {
-    fontSize: 35,
+    fontSize: 40,
     textAlign: 'center',
     fontWeight: 'bold',
   },
@@ -137,6 +179,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin:10
+  },
+  flipCard: {
+    width: 300,
+    height:200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    backfaceVisibility: 'hidden',
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    }
+  },
+  flipCardBack: {
+    backgroundColor: "#ffffff",
+    borderRadius:8,
+    position: "absolute",
+    top: 0,
+  },
+  flipText: {
+    width: 90,
+    fontSize: 20,
+    color: 'white',
+    fontWeight: 'bold',
   }
 });
 

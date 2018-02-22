@@ -9,11 +9,11 @@ import TextButton from './TextButton'
 class DeckDetails extends Component {
 
   refresh =() => {
-    console.log("Step 5 : Refreshed")
+    console.log(" Refreshed")
     }
 
   render() {
-    console.log("Step 7 : Rendering updated DeckDetails")
+  
     return (
       <View style={styles.container}>
         <View style={[styles.container,{flex:1}]}>

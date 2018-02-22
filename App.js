@@ -12,6 +12,7 @@ import { getInitialData } from './utils/initializationTask'
 import AddCard from './components/AddCard'
 import Quiz from './components/Quiz'
 
+
 const store = createStore(reducer)
 getInitialData(store)
 const Tabs = TabNavigator({
