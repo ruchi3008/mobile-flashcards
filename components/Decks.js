@@ -5,6 +5,7 @@ import { getDecks,getDeck} from '../utils/api'
 import { TabNavigator } from 'react-navigation'
 import { receiveDeck } from '../actions'
 import { connect } from 'react-redux'
+import {globalStyles} from '../utils/helper'
 
 class Decks extends Component {
   receivDeck = (deck) =>{
@@ -17,10 +18,12 @@ class Decks extends Component {
           onPress={() => {
             this.receivDeck(deck)
             this.props.navigation.navigate('DeckDetails',{deck:deck})}}>
-          <Text style={styles.textStyle1}>{deck.item.title}
+          <Text style={globalStyles.textStyle1}>{deck.item.title}
           </Text>
       </TouchableOpacity>
-      <Text style={styles.textStyle2}>{deck.item.cards.length} card{!(deck.item.cards.length===1) && <Text>s</Text>}</Text>
+      {deck.item.cards &&
+        <Text style={globalStyles.textStyle2}>{deck.item.cards.length} card{!(deck.item.cards.length===1) && <Text>s</Text>}</Text>
+      }
     </View>
   )}
   render(){
@@ -49,30 +52,12 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
     borderRadius: 4,
-     borderWidth: 0.5,
-
-  },
-  textStyle1: {
-    fontSize: 35,
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  textStyle2: {
-    fontSize: 25,
-    textAlign: 'center',
-    color:'#808080',
+    borderWidth: 0.5,
   },
 });
 
 const mapStateToProps = (state,props) => {
-  if(state)
-  {
-    return {
-      decks: state.decks
-      }
-  }
-  else {
-    return {}
-  }
-};
+    return (state)?{decks:state.decks}:{}
+
+}
 export default connect(mapStateToProps)(Decks)

@@ -13,7 +13,6 @@ export function getDecks(){
 }
 
 export function getDeck(key) {
-  console.log("Should not be called")
   return AsyncStorage.getItem(key)
 }
 
@@ -32,12 +31,10 @@ export function setDeck(deckTitle) {
 }
 
 export function addCardToDeck(question,answer,deck){
-console.log("Step 2: addCardToDeck -apis" + deck + deck.title + deck.cards.length,question,answer)
 const deckObject = {
     title:deck.title,
   //  cards:(deck.cards)?[...deck.cards,{question,answer}]:[{question,answer}]
   cards:[...deck.cards,{question,answer}]
   }
-  console.log(deckObject)
   return AsyncStorage.mergeItem(deck.title,JSON.stringify(deckObject))
 }

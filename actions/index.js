@@ -1,7 +1,4 @@
-export const RECEIVE_DECKS = "RECEIVE_DECKS"
-export const RECEIVE_DECK = "RECEIVE_DECK"
-export const ADD_DECK = "ADD_DECK"
-export const ADD_CARD = 'ADD_CARD'
+import { RECEIVE_DECKS, RECEIVE_DECK, ADD_DECK, ADD_CARD} from './types'
 
 export function receiveDecks (decks){
   return {
@@ -25,7 +22,7 @@ export function addDeck (deck){
 }
 
 export function addCard (question,answer,deck){
-  console.log("Step 3 : addCard : action")
+
   return {
     type:ADD_CARD,
     deck,

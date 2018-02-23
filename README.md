@@ -7,6 +7,7 @@ To run:
 5) Install Android emulator and run an emulator.
 6) Execute command yarn start.
 7) Use Android Emulator or Expo app on your mobile to run the project.
+   Steps to use Expo to run React Native Applications can be found at https://docs.expo.io/versions/latest/guides/create-react-native-app.html
 
 Overview
 1) Components
