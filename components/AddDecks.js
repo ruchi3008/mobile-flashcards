@@ -31,7 +31,7 @@ class AddDecks extends React.Component {
           />
          </View>
          <View style={[styles.container,{flex:1,alignItems:'center'}]}>
-          <TextButton children='Submit' style={styles.textButtonStyle} onPress={() => this._onPressButton(this.state.title)}/>
+          <TextButton children='Create Deck' style={styles.textButtonStyle} onPress={() => this._onPressButton(this.state.title)}/>
          </View>
         </View>
         <View style={[styles.container,{flex:1}]}>
