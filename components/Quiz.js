@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { StyleSheet, Text, View,Platform, TouchableOpacity,Animated} from 'react-native';
+import { Text, View,Platform, TouchableOpacity,Animated} from 'react-native';
 import { TabNavigator } from 'react-navigation'
 import { getDeck } from '../utils/api'
 import { receiveDeck } from '../actions'
@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import TextButton from './TextButton'
 import QuizResults from './QuizResults'
 import {globalStyles} from '../utils/helper'
+import { clearLocalNotification, setLocalNotification} from '../utils/notification'
 
 class Quiz extends Component {
   constructor(props){
@@ -14,7 +15,7 @@ class Quiz extends Component {
     this.state = {  questionNo:1,
       quizComplete:false,
       percentage:0,
-      correctAnswer: this.props.navigation.state.params.deck.cards.length,
+      correctAnswer: 0,
       showAnswer:false
     }
   }
@@ -41,22 +42,22 @@ class Quiz extends Component {
       this._flipCard()
     }
 
-     if (this.props.navigation.state.params.deck.cards[this.state.questionNo-1].answer.toUpperCase()!==answer.toUpperCase())
+     if (answer === 'correct')
     {
        this.setState((state)=>{
         return {
-              correctAnswer:state.correctAnswer-1,
+              correctAnswer:state.correctAnswer+1,
             }})
     }
 
     this.setState({questionNo:this.state.questionNo+1,showAnswer:false})
 
     if(this.state.questionNo===this.props.navigation.state.params.deck.cards.length){
-      const percentage = parseInt(this.state.correctAnswer)/parseInt(this.props.navigation.state.params.deck.cards.length)*100
 
+      clearLocalNotification()
+        .then(setLocalNotification)
       this.setState(
           {quizComplete:true,
-           percentage : percentage
           })
     }
   }
@@ -103,27 +104,28 @@ class Quiz extends Component {
 
   render() {
    let card = this.getCard()
+   const {length} = this.props.navigation.state.params.deck.cards
     return (
       <View style={globalStyles.container}>
-        {(this.props.navigation.state.params.deck.cards.length===0)&&
+        {(length===0)&&
           <View style={globalStyles.container}>
             <Text style={globalStyles.textStyle6}>Sorry!! This deck has no questions yet.</Text>
           </View>
         }
-        { !(this.props.navigation.state.params.deck.cards.length===0)&&
-        <View style={[globalStyles.container,{justifyContent:'flex-start'}]}>
+        { !(length===0)&&
+        <View style={globalStyles.container1}>
               {!this.state.quizComplete &&
-                <View style={[globalStyles.container,{flex:1,justifyContent:'flex-start',alignSelf:'flex-start',paddingLeft:10,paddingTop:10}]}><Text style={globalStyles.textStyle5}>{this.state.questionNo}/{this.props.navigation.state.params.deck.cards.length}</Text>
+                <View style={globalStyles.container2}><Text style={globalStyles.textStyle5}>{this.state.questionNo}/{length}</Text>
                 </View>
               }
               {
                  !this.state.quizComplete &&
-                 <View style={[globalStyles.container,{alignItems:'center',flex:3}]}>
+                 <View style={globalStyles.container3}>
                   <View>
-                   <Animated.View style={[globalStyles.flipCard,this.getAnimationStyle('front'),{justifyContent:'flex-end'}]}>
+                   <Animated.View style={[globalStyles.flipCard,this.getAnimationStyle('front')]}>
                      <Text style={globalStyles.textStyle6}>{card.question}</Text>
                    </Animated.View>
-                   <Animated.View style={[this.getAnimationStyle('back'),globalStyles.flipCard,globalStyles.flipCardBack,{justifyContent:'flex-end'}]}>
+                   <Animated.View style={[this.getAnimationStyle('back'),globalStyles.flipCard,globalStyles.flipCardBack]}>
                      <Text style={globalStyles.textStyle6}>{card.answer}</Text>
                    </Animated.View>
                   </View>
@@ -134,15 +136,14 @@ class Quiz extends Component {
               }
 
               {!this.state.quizComplete &&
-                <View style={[globalStyles.container,{flex:3,justifyContent:'flex-start',alignItems:'center'}]}>
-                   <TextButton children="Correct" style={globalStyles.textButtonStyle1} onPress={() => { this._onPressButton("yes")}}/>
-                   <TextButton children="Incorrect" style={[globalStyles.textButtonStyle1,{backgroundColor:'#B22222',paddingLeft: 58,
-                      paddingRight: 58}]} onPress={() => { this._onPressButton("no")}}/>
+                <View style={globalStyles.container5}>
+                   <TextButton children="Correct" style={globalStyles.textButtonStyle1} onPress={() => { this._onPressButton('correct')}}/>
+                   <TextButton children="Incorrect" style={globalStyles.textButtonStyle2} onPress={() => { this._onPressButton('incorrect')}}/>
                 </View>
               }
             {this.state.quizComplete &&
               <View style={[globalStyles.container]}>
-              <QuizResults deck={this.props.navigation.state.params.deck} navigation={this.props.navigation}  length={this.props.navigation.state.params.deck.cards.length} correct={this.state.correctAnswer}/>
+              <QuizResults  navigation={this.props.navigation}  length={length} correct={this.state.correctAnswer}/>
               </View>
             }
         </View>
@@ -151,11 +152,5 @@ class Quiz extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-
-
-});
-
 
 export default connect() (Quiz)

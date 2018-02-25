@@ -1,17 +1,11 @@
 import React from 'react'
-import { Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
+import { globalStyles } from '../utils/helper'
 
 export default function TextButton ({ children, onPress, style = {} }) {
   return (
     <TouchableOpacity onPress={onPress}>
-      <Text style={[styles.textButton, style]}>{children}</Text>
+      <Text style={[globalStyles.textButton, style]}>{children}</Text>
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  textButton: {
-    textAlign: 'center',
-    color:'white'
-  }
-})

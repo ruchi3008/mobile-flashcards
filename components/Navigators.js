@@ -30,7 +30,7 @@ export  const DeckStackNavigator = StackNavigator({
   DeckDetails : {
     screen: DeckDetails,
     navigationOptions: ({navigation}) =>({
-      title:`${navigation.state.params.deck.item.title}`,
+      title:`${navigation.state.params.deck.title}`,
       headerTintColor: 'white',
       headerStyle: {
         backgroundColor: 'black',

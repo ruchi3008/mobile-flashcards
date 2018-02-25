@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import { StyleSheet, Text, View, FlatList, AsyncStorage,TouchableOpacity} from 'react-native';
+import {  Text, View, FlatList, AsyncStorage,TouchableOpacity} from 'react-native';
 import { StackNavigator } from 'react-navigation'
 import { getDecks,getDeck} from '../utils/api'
 import { TabNavigator } from 'react-navigation'
@@ -13,11 +13,11 @@ class Decks extends Component {
   }
   renderItems = (deck) => {
     return (
-    <View style={styles.deckStyle}>
+    <View style={globalStyles.deckStyle}>
       <TouchableOpacity
           onPress={() => {
             this.receivDeck(deck)
-            this.props.navigation.navigate('DeckDetails',{deck:deck})}}>
+            this.props.navigation.navigate('DeckDetails',{deck:deck.item})}}>
           <Text style={globalStyles.textStyle1}>{deck.item.title}
           </Text>
       </TouchableOpacity>
@@ -29,7 +29,7 @@ class Decks extends Component {
   render(){
 
     return (
-      <View style={styles.container}>
+      <View style={globalStyles.container9}>
         <FlatList
           data={this.props.decks}
           renderItem = {this.renderItems}
@@ -40,21 +40,6 @@ class Decks extends Component {
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent:'center',
-    alignItems:'stretch',
-    backgroundColor:'white'
-  },
-  deckStyle: {
-    height:175,
-    justifyContent:'center',
-    alignItems:'center',
-    borderRadius: 4,
-    borderWidth: 0.5,
-  },
-});
 
 const mapStateToProps = (state,props) => {
     return (state)?{decks:state.decks}:{}

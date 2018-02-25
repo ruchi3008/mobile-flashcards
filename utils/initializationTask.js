@@ -13,13 +13,14 @@ export function getInitialData(store){
   AsyncStorage.getAllKeys((err, keys) => {
   AsyncStorage.multiGet(keys, (err, decks) => {
 
-    decks.map((result, i, deck) => {
+    decks.map((decks, i, deck) => {
       let key = deck[i][0]
       let value = deck[i][1]
-      allDecks.push(JSON.parse(value))
+      let obj =JSON.parse(value)
+      if(obj.hasOwnProperty('title')&&obj.hasOwnProperty('cards'))
+        allDecks.push(JSON.parse(value))
     })
-
-      store.dispatch(receiveDecks(allDecks))
+    store.dispatch(receiveDecks(allDecks))
   });
 });
 }
